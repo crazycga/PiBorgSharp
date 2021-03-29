@@ -1,18 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.0.2</Version>
     <Description />
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\PiBorgSharp.LibNativeI2C\LibNativeI2C.vcxproj">
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </ProjectReference>
-  </ItemGroup>
 
 </Project>
