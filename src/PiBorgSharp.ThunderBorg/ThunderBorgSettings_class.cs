@@ -273,7 +273,7 @@ namespace PiBorgSharp.ThunderBorg
         /// Enumerates the [ThunderBorg_class] board passed into it, and records the settings it finds.
         /// </summary>
         /// <param name="borg">The _intiialized_ ThunderBorg board to be enumerated</param>
-        /// <param name="logger">[Optional] Logger class to keep track of actions and other information</param>
+        /// <param name="logger">Default: null; the ILogger interface used in this library</param>
         public void GetCurrentEnvironment(ThunderBorg_class borg, ILogger logger = null)
         {
             Stopwatch elapsedTime = new Stopwatch();
@@ -330,7 +330,7 @@ namespace PiBorgSharp.ThunderBorg
         /// Sets the _initialized_ [ThunderBorg_class] board to the settings contained in this object.  **NOTE** if the board address differs from this object's board address, this method will not run.
         /// </summary>
         /// <param name="borg">The _intiialized_ ThunderBorg board to be enumerated</param>
-        /// <param name="logger">[Optional] Logger class to keep track of actions and other information</param>
+        /// <param name="logger">Default: null; the ILogger interface used in this library</param>
         public void SetCurrentEnvironment(ThunderBorg_class borg, ILogger logger = null)
         {
             Stopwatch elapsedTime = new Stopwatch();

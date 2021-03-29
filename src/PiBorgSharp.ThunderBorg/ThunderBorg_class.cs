@@ -60,6 +60,12 @@ namespace PiBorgSharp.ThunderBorg
         private int _TBorgAddress = 0x00;
         private ILogger _log = null;
 
+        /// <summary>
+        /// Scans the I2C bus for the ThunderBorg board.  It will scan bus 1 by default, and return the port number when it gets a ThunderBorg response to the board ID request.
+        /// </summary>
+        /// <param name="busNumber">Default: 1; this parameter will map to /dev/i2c-n where n is the bus number</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Port number found for ThunderBorg; -1 if no board found</returns>
         public static int ScanForThunderBorg(int busNumber = 1, ILogger log = null)
         {
             int tempReturn = -1;
@@ -104,6 +110,14 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Sets a new address for the ThunderBorg.  CAUTION: this setting is persistent and will continue after powering down your ThunderBorg.
+        /// </summary>
+        /// <param name="newAddress">The new port address for the ThunderBorg</param>
+        /// <param name="oldAddress">Optional - if specified the method will use this address as opposed to scanning for the ThunderBorg</param>
+        /// <param name="busNumber">Default: 1; this parameter will map to /dev/i2c-n where n is the bus number</param>
+        /// <param name="logger">Default: null; the ILogger interface used in this library</param>
+        /// <returns>The new port number for the ThunderBorg</returns>
         public static int SetNewAddress(byte newAddress, byte? oldAddress = null, int? busNumber = 0, ILogger logger = null)
         {
             int _oldAddress;
@@ -153,6 +167,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Main ThunderBorg class
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <param name="tryOtherBus">CURRENTLY NO EFFECT</param>
         public ThunderBorg_class(ILogger log = null, bool tryOtherBus = false)
         {
             if (log != null)
@@ -190,6 +209,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Sets the motor power for the A motors.  Range of options is from -255 < n < 255.  Negative numbers indicate reverse.
+        /// </summary>
+        /// <param name="power">Power setting: -255 < n < 255; if outside this range, it will use the maximum</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetMotorA(int power, ILogger log = null)
         {
             if (!_CheckInit())
@@ -234,6 +258,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Sets the motor power for the B motors.  Range of options is from -255 < n < 255.  Negative numbers indicate reverse.
+        /// </summary>
+        /// <param name="power">Power setting: -255 < n < 255; if outside this range, it will use the maximum</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetMotorB(int power, ILogger log = null)
         {
             if (!_CheckInit())
@@ -278,6 +307,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Gets the current power setting of the A motors.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Power setting of motor: -255 < n < 255 where negative values indicate reverse</returns>
         public int GetMotorA(ILogger log = null)
         {
             int tempReturn = 0;
@@ -338,6 +372,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Gets the current power setting of the B motors.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Power setting of motor: -255 < n < 255 where negative values indicate reverse</returns>
         public int GetMotorB(ILogger log = null)
         {
             int tempReturn = 0;
@@ -398,6 +437,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Sets the motor power for the all motors.  Range of options is from -255 < n < 255.  Negative numbers indicate reverse.
+        /// </summary>
+        /// <param name="power">Power setting: -255 < n < 255; if outside this range, it will use the maximum</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetAllMotors(int power, ILogger log = null)
         {
             if (!_CheckInit())
@@ -442,6 +486,10 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Command to set all motors to stop.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void AllStop(ILogger log = null)
         {
             if (!_CheckInit(log, true))
@@ -460,6 +508,14 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Polls the A motors for fault.  Response bytes after constant indicate an error as been detected.  Faults may indicate power problems, such as under-voltage (not enough power), and may be cleared
+        /// by setting a lower drive power.
+        /// Faults will self-clear, they do not need to be reset, however some faults require both motors to be moving at less than 100% to clear.  NOTE: the fault state may indicate a fault att power up; this is normal
+        /// and should clear when the motors are run.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>A byte array of the exact response from the board to this command - max length = I2C_MAX_LEN (default 6)</returns>
         public byte[] GetDriveFaultA(ILogger log = null)
         {
             if (!_CheckInit(log, true))
@@ -488,6 +544,14 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Polls the B motors for fault.  Response bytes after constant indicate an error as been detected.  Faults may indicate power problems, such as under-voltage (not enough power), and may be cleared
+        /// by setting a lower drive power.
+        /// Faults will self-clear, they do not need to be reset, however some faults require both motors to be moving at less than 100% to clear.  NOTE: the fault state may indicate a fault att power up; this is normal
+        /// and should clear when the motors are run.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>A byte array of the exact response from the board to this command - max length = I2C_MAX_LEN (default 6)</returns>
         public byte[] GetDriveFaultB(ILogger log = null)
         {
             if (!_CheckInit(log, true))
@@ -516,6 +580,14 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Sets the communications failsafe state.
+        /// The failsafe will turn the motors off unless the ThunderBorg receives a command from the computer at least once every 1/4 seconds.  This is used to turn the ThunderBorg off
+        /// if the computer stops sending communications to the ThunderBorg, such as in a power outage situation.  (NOTE: this makes the LED(s) blink red, and disables the ability to change
+        /// the LED colors.)
+        /// </summary>
+        /// <param name="setting">True - failsafe engaged; false - failsafe disengaged</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetFailsafe(bool setting, ILogger log = null)
         {
             if (!_CheckInit())
@@ -544,6 +616,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Polls the current failsafe setting
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Failsafe state: true - failsafe on; false - failsafe off</returns>
         public bool GetFailsafe(ILogger log = null)
         {
             if (!_CheckInit())
@@ -571,6 +648,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Polls the current color setting of LED1 (on the ThunderBorg board.)
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>A byte array of I2C_MAX_LEN (default 6) bytes containing the command, and three bytes of colors corresponding to red, green and blue</returns>
         public byte[] GetLED1(ILogger log = null)
         {
             byte[] tempReturn;
@@ -611,6 +693,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Polls the current color setting of LED2 (on the ThunderBorg lid.)
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>A byte array of I2C_MAX_LEN (default 6) bytes containing the command, and three bytes of colors corresponding to red, green and blue</returns>
         public byte[] GetLED2(ILogger log = null)
         {
             byte[] tempReturn;
@@ -651,6 +738,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Polls the current setting of the LED system to determine if it is showing the battery monitor
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Current battery monitor setting: true - monitoring battery; false - not monitoring battery</returns>
         public bool GetLEDBatteryMonitor(ILogger log = null)
         {
             bool tempReturn = false;
@@ -690,6 +782,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Sets the LED(s) to show a color corresponding to the current voltage available from the battery.  NOTE: this will disabled manually setting LED colors.
+        /// </summary>
+        /// <param name="setting">True - monitor battery; false - do not monitor battery</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetLEDBatteryMonitor(bool setting, ILogger log = null)
         {
             if (!_CheckInit())
@@ -708,6 +805,14 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Sets the LED1 (on the ThunderBorg board) to the color specified by the red, green and blue values.
+        /// NOTE: this will not work if either battery monitoring is on, or the failsafe mode is on.
+        /// </summary>
+        /// <param name="red">Red value: 0 <= n <= 255</param>
+        /// <param name="green">Green value: 0 <= n <= 255</param>
+        /// <param name="blue">Blue value: 0 <= n <= 255</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetLED1(byte red, byte green, byte blue, ILogger log = null)
         {
             if (!_CheckInit())
@@ -726,6 +831,14 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Sets the LED2 (on the ThunderBorg lid) to the color specified by the red, green and blue values.
+        /// NOTE: this will not work if either battery monitoring is on, or the failsafe mode is on.
+        /// </summary>
+        /// <param name="red">Red value: 0 <= n <= 255</param>
+        /// <param name="green">Green value: 0 <= n <= 255</param>
+        /// <param name="blue">Blue value: 0 <= n <= 255</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetLED2(byte red, byte green, byte blue, ILogger log = null)
         {
             if (!_CheckInit())
@@ -744,6 +857,14 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Sets all LEDs (on the ThunderBorg board AND ThunderBorg lid) to the color specified by the red, green and blue values.
+        /// NOTE: this will not work if either battery monitoring is on, or the failsafe mode is on.
+        /// </summary>
+        /// <param name="red">Red value: 0 <= n <= 255</param>
+        /// <param name="green">Green value: 0 <= n <= 255</param>
+        /// <param name="blue">Blue value: 0 <= n <= 255</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetLEDs(byte red, byte green, byte blue, ILogger log = null)
         {
             if (!_CheckInit())
@@ -764,6 +885,11 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Polls the ThunderBorg to determine current voltage supplied to the ThunderBorg
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Current voltage recorded at the ThunderBorg</returns>
         public decimal GetBatteryVoltage(ILogger log = null)
         {
             int tempIntReturn = 0;
@@ -804,6 +930,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Gets the board ID of the board
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Board ID (ThunderBorg is 0x15)</returns>
         public byte GetBoardID (ILogger log = null)
         {
             byte tempReturn = 0x00;
@@ -831,6 +962,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Gets the current minimum and maximum voltage that the battery monitoring system uses.  See SetBatteryMonitoringLimits for more information.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Array of two decimal values: the minimum and maximum voltages</returns>
         public decimal[] GetBatteryMonitoringLimits(ILogger log = null)
         {
             decimal tempMin = 0.00M;
@@ -878,7 +1014,7 @@ namespace PiBorgSharp.ThunderBorg
         /// </summary>
         /// <param name="minimum">Minimum voltage (0 V minimum)</param>
         /// <param name="maximum">Maximum voltage (36.3 V maximum)</param>
-        /// <param name="log">Optional logging output routine</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void SetBatteryMonitoringLimits(decimal minimum, decimal maximum, ILogger log = null)
         {
             // my original values were 6.98 / 35.02; I don't know what the defaults are
@@ -905,6 +1041,10 @@ namespace PiBorgSharp.ThunderBorg
             }
         }
 
+        /// <summary>
+        /// Demonstrates LED color changes.  NOTE: this turns OFF battery monitoring.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void WaveLEDs(ILogger log = null)
         {
             bool batSetting = false;
@@ -964,6 +1104,10 @@ namespace PiBorgSharp.ThunderBorg
             log.WriteLog("Ran LED tests for total timee of " + myStop.Elapsed.ToString(), ILogger.Priority.Medium);
         }
 
+        /// <summary>
+        /// Executes a test run on all wheels from slow to fast to slow again.  NOTE: ensure you have room for this test, or that the ThunderBorg is off the wheels.
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void TestSpeeds(ILogger log = null)
         {
             if (log != null)
@@ -989,6 +1133,11 @@ namespace PiBorgSharp.ThunderBorg
             if (Console.KeyAvailable) Console.ReadKey(true);
         }
 
+        /// <summary>
+        /// Executes a distance test as set out by the PiBorg company; used for benchmarking
+        /// </summary>
+        /// <param name="meters">Length in meters to travel (roughly estimated)</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void TestDistance(decimal meters, ILogger log = null)
         {
             decimal calculatedSpeed = SECONDS_PER_METER;
@@ -1005,6 +1154,10 @@ namespace PiBorgSharp.ThunderBorg
             this.AllStop();
         }
 
+        /// <summary>
+        /// Executes a spin test as set out by the PiBorg company; used for benchmarking
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
         public void TestSpin(ILogger log = null)
         {
             decimal calculatedSpin = SECONDS_PER_SPIN;
@@ -1021,6 +1174,12 @@ namespace PiBorgSharp.ThunderBorg
             this.AllStop();
         }
 
+        /// <summary>
+        /// Internal process used to determine if the board is initiated or not
+        /// </summary>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <param name="throwException">True - throw a new exception; false - suppress exception</param>
+        /// <returns></returns>
         private bool _CheckInit(ILogger log = null, bool throwException = false)
         {
             bool tempReturn = false;
@@ -1049,6 +1208,11 @@ namespace PiBorgSharp.ThunderBorg
             return tempReturn;
         }
 
+        /// <summary>
+        /// Helper routine to output the contents of a byte array as a hexadecimal string
+        /// </summary>
+        /// <param name="incoming">Byte array to parse into a string</param>
+        /// <returns>String representing hexadecimal bytes in array</returns>
         public string BytesToString (byte[] incoming)
         {
             string tempReturn = string.Empty;
