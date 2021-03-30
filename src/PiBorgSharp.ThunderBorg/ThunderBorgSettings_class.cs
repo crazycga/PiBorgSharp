@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using PiBorgSharp;
 
 namespace PiBorgSharp.ThunderBorg
 {

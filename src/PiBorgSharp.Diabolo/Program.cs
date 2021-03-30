@@ -1,4 +1,5 @@
 ﻿using System;
+using PiBorgSharp;
 
 namespace PiBorgSharp.Diabolo
 {
