@@ -6,6 +6,7 @@ namespace PiBorgSharp
 {
     public interface ILogger
     {
+        // testing code push
         public enum Priority
         {
             Critical = 5,
