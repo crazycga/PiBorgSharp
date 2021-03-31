@@ -21,8 +21,15 @@ located at Microsoft's website: https://docs.microsoft.com/en-us/dotnet/iot/depl
 
 ## NuGet Packages  
 
+### PiBorgSharp
+![Nuget](https://img.shields.io/nuget/v/PiBorgSharp) ![Nuget](https://img.shields.io/nuget/dt/PiBorgSharp) [![Build PiBorgSharp DLLs](https://github.com/crazycga/PiBorgSharp/actions/workflows/Build_PiBorgSharp.yml/badge.svg)](https://github.com/crazycga/PiBorgSharp/actions/workflows/Build_PiBorgSharp.yml)
+
+This is the main NuGet package that contains the wrappers and log interface necessary to run the other projects.  Available with the command:
+
+`Install-Package PiBorgSharp`
+
 ### PiBorgSharp.ThunderBorg 
-![Nuget](https://img.shields.io/nuget/v/PiBorgSharp.ThunderBorg) ![Nuget](https://img.shields.io/nuget/dt/PiBorgSharp.ThunderBorg) [![ThunderBorg DLLs](https://github.com/crazycga/PiBorgSharp/actions/workflows/DLLThunderSharp.yml/badge.svg)](https://github.com/crazycga/PiBorgSharp/actions/workflows/DLLThunderSharp.yml)
+![Nuget](https://img.shields.io/nuget/v/PiBorgSharp.ThunderBorg) ![Nuget](https://img.shields.io/nuget/dt/PiBorgSharp.ThunderBorg) [![Build PiBorgSharp.ThunderBorg DLLs](https://github.com/crazycga/PiBorgSharp/actions/workflows/DLL_PiBorgSharp_ThunderBorg.yml/badge.svg)](https://github.com/crazycga/PiBorgSharp/actions/workflows/DLL_PiBorgSharp_ThunderBorg.yml)
 
 The NuGet package is available with the command 
 
