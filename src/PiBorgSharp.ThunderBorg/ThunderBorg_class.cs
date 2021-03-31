@@ -5,6 +5,7 @@ namespace PiBorgSharp.ThunderBorg
 {
     public class ThunderBorg_class
     {
+        // test build
         // based on original source written by Arron Churchill (I think): https://www.piborg.org/blog/piborg-arron
         public static readonly bool THROTTLE_CODE               = false;     // added to introduce code throttling; maybe the code is too fast?
 
