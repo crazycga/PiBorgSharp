@@ -91,7 +91,7 @@ namespace PiBorgSharp.ThunderBorg
                                 tempReturn = port;
                                 if (log != null)
                                 {
-                                    log.WriteLog("FOUND ThunderBorg_class board on port: " + port.ToString("X2"));
+                                    log.WriteLog("FOUND ThunderBorg board on port: " + port.ToString("X2"));
                                 }
                             }
                         }
@@ -178,9 +178,8 @@ namespace PiBorgSharp.ThunderBorg
             if (log != null)
             {
                 this._log = log;
-                log.WriteLog("THROTTLE_CODE: " + THROTTLE_CODE.ToString());
-                log.WriteLog();
-                log.WriteLog("Finding ThunderBorg_class...");
+                log.WriteLog("THROTTLE_CODE: " + THROTTLE_CODE.ToString(), ILogger.Priority.Information);
+                log.WriteLog("Instantiating ThunderBorg_class...", ILogger.Priority.Information);
                 _TBorgAddress = ThunderBorg_class.ScanForThunderBorg(1, log);
             }
             else
@@ -190,7 +189,7 @@ namespace PiBorgSharp.ThunderBorg
 
             if (log != null)
             {
-                log.WriteLog("Loding ThunderBorg_class on bus " + _bus.ToString("X2") + ", address " + _TBorgAddress.ToString("X2"));
+                log.WriteLog("Loading ThunderBorg on bus " + _bus.ToString("X2") + ", address " + _TBorgAddress.ToString("X2"));
             }
         }
 
@@ -335,7 +334,7 @@ namespace PiBorgSharp.ThunderBorg
                 {
                     if (log != null)
                     {
-                        log.WriteLog("*** ERROR: no response from ThunderBorg_class...");
+                        log.WriteLog("*** ERROR: no response from ThunderBorg board...");
                     }
 
                     throw new NullReferenceException("No parseable response from A motors on GetMotorA request.");
@@ -400,7 +399,7 @@ namespace PiBorgSharp.ThunderBorg
                 {
                     if (log != null)
                     {
-                        log.WriteLog("*** ERROR: no response from ThunderBorg_class...");
+                        log.WriteLog("*** ERROR: no response from ThunderBorg board...");
                     }
 
                     throw new NullReferenceException("No parseable response from B motors on GetMotorB request.");
@@ -626,7 +625,7 @@ namespace PiBorgSharp.ThunderBorg
         {
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             bool tempReturn = false;
@@ -750,7 +749,7 @@ namespace PiBorgSharp.ThunderBorg
 
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
@@ -898,7 +897,7 @@ namespace PiBorgSharp.ThunderBorg
 
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             if (log != null)
@@ -942,7 +941,7 @@ namespace PiBorgSharp.ThunderBorg
 
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             if (log != null)
@@ -975,7 +974,7 @@ namespace PiBorgSharp.ThunderBorg
 
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
@@ -1021,7 +1020,7 @@ namespace PiBorgSharp.ThunderBorg
             // my original values were 6.98 / 35.02; I don't know what the defaults are
             if (!_CheckInit())
             {
-                throw new NullReferenceException("ThunderBorg_class not initiated.");
+                throw new NullReferenceException("ThunderBorg_class not instantiated.");
             }
 
             minimum /= Convert.ToDecimal(VOLTAGE_PIN_MAX);
@@ -1176,7 +1175,7 @@ namespace PiBorgSharp.ThunderBorg
         }
 
         /// <summary>
-        /// Internal process used to determine if the board is initiated or not
+        /// Internal process used to determine if the board is initialized or not
         /// </summary>
         /// <param name="log">Default: null; the ILogger interface used in this library</param>
         /// <param name="throwException">True - throw a new exception; false - suppress exception</param>
@@ -1189,12 +1188,12 @@ namespace PiBorgSharp.ThunderBorg
             {
                 if (log != null)
                 {
-                    log.WriteLog("ThunderBorg_class not initiated...");
+                    log.WriteLog("ThunderBorg_class not instantiated...");
                 }
 
                 if (throwException)
                 {
-                    throw new InvalidOperationException("ThunderBorg_class not initialized.");
+                    throw new InvalidOperationException("ThunderBorg_class not instantiated.");
                 }
                 else
                 {
