@@ -180,12 +180,9 @@ namespace PiBorgSharp.ThunderBorg
                 this._log = log;
                 log.WriteLog("THROTTLE_CODE: " + THROTTLE_CODE.ToString(), ILogger.Priority.Information);
                 log.WriteLog("Instantiating ThunderBorg_class...", ILogger.Priority.Information);
-                _TBorgAddress = ThunderBorg_class.ScanForThunderBorg(1, log);
             }
-            else
-            {
-                _TBorgAddress = ThunderBorg_class.ScanForThunderBorg();
-            }
+
+            _TBorgAddress = ThunderBorg_class.ScanForThunderBorg(1, log);
 
             if (log != null)
             {
