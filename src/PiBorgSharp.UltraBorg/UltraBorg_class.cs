@@ -14,7 +14,7 @@ namespace PiBorgSharp.UltraBorg
         public static readonly decimal USM_US_TO_MM             = 0.17500M;
         public static readonly int PWM_MIN                      = 2000;
         public static readonly int PWM_MAX                      = 4000;
-        public static readonly decimal DELAY_AFTER_EPROM        = 0.01M;
+        public static readonly decimal DELAY_AFTER_EEPROM       = 0.01M;
         public static readonly int PWM_RESET                    = 0xFFFF;
 
         public static readonly byte I2C_ID_SERVO_USM            = 0x36;
@@ -89,6 +89,7 @@ namespace PiBorgSharp.UltraBorg
         {
             Minimum = 1
             , Maximum = 2
+            , Boot = 3
         }
 
         /// <summary>
@@ -235,6 +236,13 @@ namespace PiBorgSharp.UltraBorg
 
         }
 
+        /// <summary>
+        /// Gets the PWM level for a servo output, and returns an integer value where 2000 represents a 1 millisecond servo burst.  Examples: 2000 -> 1 ms: typical shortest burst; 5000 -> 2.5 ms burst: higher than typical longest burst
+        /// </summary>
+        /// <param name="motor">Selected motor: 1, 2, 3, or 4</param>
+        /// <param name="checkBoundary">Available options: minimum, maximum or boot (startup)</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>Integer value where n / 2000 = 1 millisecond</returns>
         public int GetServo(byte motor, ValueType checkBoundary, ILogger log = null)
         {
             int tempreturn = -1;
@@ -258,7 +266,7 @@ namespace PiBorgSharp.UltraBorg
                             tempCommand = COMMAND_GET_PWM_MIN_4;
                             break;
                         default:
-                            tempCommand = 0xFD;
+                            tempCommand = 0xFC;
                             break;
                     }
                     break;
@@ -277,6 +285,27 @@ namespace PiBorgSharp.UltraBorg
                             break;
                         case 4:
                             tempCommand = COMMAND_GET_PWM_MAX_4;
+                            break;
+                        default:
+                            tempCommand = 0xFD;
+                            break;
+                    }
+                    break;
+
+                case ValueType.Boot:
+                    switch(motor)
+                    {
+                        case 1: 
+                            tempCommand = COMMAND_GET_PWM_BOOT_1;
+                            break;
+                        case 2:
+                            tempCommand = COMMAND_GET_PWM_BOOT_2;
+                            break;
+                        case 3:
+                            tempCommand = COMMAND_GET_PWM_BOOT_3;
+                            break;
+                        case 4:
+                            tempCommand = COMMAND_GET_PWM_BOOT_4;
                             break;
                         default:
                             tempCommand = 0xFE;
@@ -299,11 +328,14 @@ namespace PiBorgSharp.UltraBorg
                     
                     switch (tempCommand)
                     {
-                        case 0xFD:
+                        case 0xFC:
                             message += "Got unknown motor while enumerating minimum...";
                             break;
-                        case 0xFE:
+                        case 0xFD:
                             message += "Got unknown motor while enumerating maximum...";
+                            break;
+                        case 0xFE:
+                            message += "Got unknown motor while enumerating boot...";
                             break;
                         case 0xFF:
                             message += "Got a check for a boundary that doesn't exist...";
@@ -323,18 +355,334 @@ namespace PiBorgSharp.UltraBorg
                 }
                 using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
                 {
-                    bus.WriteBytes(_UltraBorgAddress, new byte[] { COMMAND_GET_PWM_MIN_1 });
+                    bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand });
                     byte[] response = bus.ReadBytes(this._UltraBorgAddress, I2C_MAX_LEN);
 
-                    if (response[0] == COMMAND_GET_PWM_MIN_1)
+                    if (response[0] == tempCommand)
                     {
                         tempreturn = (response[1] << 8) + response[2];
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                // do something here
+            }
 
             return tempreturn;
+        }
+
+        /// <summary>
+        /// Sets the raw PWM level for the motor referenced by *motor*.  The value is 0 <= n <= 65535 where 0 is a 0% duty cycle and 65535 is a 100% duty cycle.
+        /// NOTE: although this routine *DOES* reject values outside this range, there is *no limit checking on the board*.  It is possible to set values OUTSIDE
+        /// this range, but doing so for extended periods may damage the board or the servo.  PiBorg and the PiBorgSharp project recommend using the tuning GUI 
+        /// for setting the servo limits.
+        /// </summary>
+        /// <param name="motor">Selected motor: 1, 2, 3, or 4</param>
+        /// <param name="powerLevel">0 for a 0% duty cycle <= n <= 65535 for a 100% duty cycle</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        public void CalibrateServoPosition(byte motor, ushort powerLevel, ILogger log = null)
+        {
+            byte pwmDutyLow = (byte)(powerLevel & 0xFF);
+            byte pwmDutyHigh = (byte)((powerLevel >> 8) & 0xFF);
+            byte tempCommand = 0xFF;
+
+            if ((pwmDutyHigh > 255) | (pwmDutyHigh < 0) | (pwmDutyLow<0) | (pwmDutyLow > 255))
+            {
+                if (log != null)
+                {
+                    log.WriteLog("Received a value outside the boundaries of 0 < n < 65535 (but I don't know how...)", ILogger.Priority.Critical);
+                }
+                
+                throw new ArgumentException("powerLevel setting - argument out of bounds");
+            }
+
+            if (log != null)
+            {
+                log.WriteLog("Received word: " + powerLevel.ToString("X2") + " and parsed low: " + pwmDutyLow.ToString("X2") + " and high: " + pwmDutyHigh.ToString("X2") + "...", ILogger.Priority.Information);
+            }
+
+            switch (motor)
+            {
+                case 1:
+                    tempCommand = COMMAND_CALIBRATE_PWM1;
+                    break;
+                case 2:
+                    tempCommand = COMMAND_CALIBRATE_PWM2;
+                    break;
+                case 3:
+                    tempCommand = COMMAND_CALIBRATE_PWM3;
+                    break;
+                case 4:
+                    tempCommand = COMMAND_CALIBRATE_PWM4;
+                    break;
+                default:
+                    tempCommand = 0xFF;
+                    break;
+            }
+
+            using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
+            {
+                bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand, pwmDutyHigh, pwmDutyLow });
+            }
+        }
+
+        /// <summary>
+        /// Gets the raw PWM level for the servo output.  Return value is anywhere between 0 for a 0% duty cycle to 65535 for a 100% duty cycle.
+        /// </summary>
+        /// <param name="motor">Selected motor: 1, 2, 3, or 4</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        /// <returns>0 <= n <= 65535 representing the duty cycle of the selected servo</returns>
+        public ushort GetRawServoPosition(byte motor, ILogger log = null)
+        {
+            byte tempCommand = 0xFF;
+            ushort tempReturn = 0;
+
+            switch (motor)
+            {
+                case 1:
+                    tempCommand = COMMAND_GET_PWM1;
+                    break;
+                case 2:
+                    tempCommand = COMMAND_GET_PWM2;
+                    break;
+                case 3:
+                    tempCommand = COMMAND_GET_PWM3;
+                    break;
+                case 4:
+                    tempCommand = COMMAND_GET_PWM4;
+                    break;
+                default:
+                    tempCommand = 0xFE;
+                    break;
+            }
+
+            if (log != null)
+            {
+                log.WriteLog("Polling motor " + motor.ToString() + " for raw servo position...");
+            }
+
+            using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
+            {
+                bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand });
+                byte[] response = bus.ReadBytes(_UltraBorgAddress, I2C_MAX_LEN);
+                tempReturn = (ushort)((response[1] << 8) + response[2]);
+            }
+
+            return tempReturn;
+        }
+
+        /// <summary>
+        /// Sets the servo levels for minimum, maximum and boot level.  NOTE: trying to set a boot value outside the min/max (default, or as previously set) will fail and throw an ArgumentException.
+        /// </summary>
+        /// <param name="motor">Selected motor: 1, 2, 3, or 4</param>
+        /// <param name="checkBoundary">Available options: minimum, maximum or boot (startup)</param>
+        /// <param name="powerLevel">0 <= n <= 65535 representing the duty cycle of the selected servo</param>
+        /// <param name="log">Default: null; the ILogger interface used in this library</param>
+        public void SetServo(byte motor, ValueType checkBoundary, ushort powerLevel, ILogger log = null) 
+        {
+            byte tempCommand = 0x00;
+
+            switch (checkBoundary)
+            {
+                case ValueType.Minimum:
+                    switch (motor)
+                    {
+                        case 1:
+                            tempCommand = COMMAND_SET_PWM_MIN_1;
+                            break;
+                        case 2:
+                            tempCommand = COMMAND_SET_PWM_MIN_2;
+                            break;
+                        case 3:
+                            tempCommand = COMMAND_SET_PWM_MIN_3;
+                            break;
+                        case 4:
+                            tempCommand = COMMAND_SET_PWM_MIN_4;
+                            break;
+                        default:
+                            tempCommand = 0xFC;
+                            break;
+                    }
+                    break;
+
+                case ValueType.Maximum:
+                    switch (motor)
+                    {
+                        case 1:
+                            tempCommand = COMMAND_SET_PWM_MAX_1;
+                            break;
+                        case 2:
+                            tempCommand = COMMAND_SET_PWM_MAX_2;
+                            break;
+                        case 3:
+                            tempCommand = COMMAND_SET_PWM_MAX_3;
+                            break;
+                        case 4:
+                            tempCommand = COMMAND_SET_PWM_MAX_4;
+                            break;
+                        default:
+                            tempCommand = 0xFD;
+                            break;
+                    }
+                    break;
+
+                case ValueType.Boot:
+                    switch (motor)
+                    {
+                        case 1:
+                            tempCommand = COMMAND_SET_PWM_BOOT_1;
+                            break;
+                        case 2:
+                            tempCommand = COMMAND_SET_PWM_BOOT_2;
+                            break;
+                        case 3:
+                            tempCommand = COMMAND_SET_PWM_BOOT_3;
+                            break;
+                        case 4:
+                            tempCommand = COMMAND_SET_PWM_BOOT_4;
+                            break;
+                        default:
+                            tempCommand = 0xFE;
+                            break;
+                    }
+                    break;
+
+                default:
+                    tempCommand = 0xFF;
+                    break;
+            }
+
+            if (checkBoundary == ValueType.Boot)
+            {
+                bool passBoundaryValidation = false;
+                int checkMin = 0;
+                int checkMax = 65535;
+
+                // original author assumes that in the case of PWM_MIN_x being greater than PWM_MAX_x then the system would reverse the check; to accomplish
+                // this, I'm going to set my own boundaries to ensure the smaller is the minimum
+
+                switch (motor)
+                {
+                    case 1:
+                        checkMin = Math.Min(this.PWM_MIN_1, this.PWM_MAX_1);
+                        checkMax = Math.Max(this.PWM_MIN_1, this.PWM_MAX_1);
+                        if ((powerLevel >= checkMin) && (powerLevel <= checkMax))
+                        {
+                            passBoundaryValidation = true;
+                        }
+                        break;
+                    case 2:
+                        checkMin = Math.Min(this.PWM_MIN_2, this.PWM_MAX_2);
+                        checkMax = Math.Max(this.PWM_MIN_2, this.PWM_MAX_2);
+                        if ((powerLevel >= checkMin) && (powerLevel <= checkMax))
+                        {
+                            passBoundaryValidation = true;
+                        }
+                        break;
+                    case 3:
+                        checkMin = Math.Min(this.PWM_MIN_3, this.PWM_MAX_3);
+                        checkMax = Math.Max(this.PWM_MIN_3, this.PWM_MAX_3);
+                        if ((powerLevel >= checkMin) && (powerLevel <= checkMax))
+                        {
+                            passBoundaryValidation = true;
+                        }
+                        break;
+                    case 4:
+                        checkMin = Math.Min(this.PWM_MIN_4, this.PWM_MAX_4);
+                        checkMax = Math.Max(this.PWM_MIN_4, this.PWM_MAX_4);
+                        if ((powerLevel >= checkMin) && (powerLevel <= checkMax))
+                        {
+                            passBoundaryValidation = true;
+                        }
+                        break;
+                    default:
+                        passBoundaryValidation = false;
+                        break;
+                }
+
+                if (!passBoundaryValidation)
+                {
+                    if (log != null)
+                    {
+                        log.WriteLog("Setting boot value for motor " + motor.ToString() + " failed validation check...", ILogger.Priority.Critical);
+                    }
+
+                    throw new ArgumentException("Boot power level out of range for motor " + motor.ToString());
+                }
+            }
+
+            if (tempCommand > 0xF1)
+            {
+                if (log != null)
+                {
+                    string message = string.Empty;
+
+                    message = "An error was returned trying to prepare SetServo; passed " + checkBoundary.ToString() + " and " + motor.ToString() + " as parameters...\n";
+
+                    switch (tempCommand)
+                    {
+                        case 0xFC:
+                            message += "Got unknown motor while setting minimum...";
+                            break;
+                        case 0xFD:
+                            message += "Got unknown motor while setting maximum...";
+                            break;
+                        case 0xFE:
+                            message += "Got unknown motor while setting boot...";
+                            break;
+                        case 0xFF:
+                            message += "Got a boundary that doesn't exist...";
+                            break;
+                    }
+
+                    log.WriteLog(message, ILogger.Priority.Critical);
+                }
+            }
+
+            byte pwmDutyLow = (byte)(powerLevel & 0xFF);
+            byte pwmDutyHigh = (byte)((powerLevel >> 8) & 0xFF);
+
+            using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
+            {
+                bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand, pwmDutyHigh, pwmDutyLow });
+
+                // note: the system has to sleep for a brief time to write changes to the EEPROM
+                System.Threading.Thread.Sleep(Convert.ToInt32(DELAY_AFTER_EEPROM * 1000));
+
+                switch (tempCommand)
+                {
+                    case var _ when tempCommand == COMMAND_SET_PWM_MIN_1:
+                        this.PWM_MIN_1 = this.GetServo(1, ValueType.Minimum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MIN_2:
+                        this.PWM_MIN_2 = this.GetServo(2, ValueType.Minimum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MIN_3:
+                        this.PWM_MIN_3 = this.GetServo(3, ValueType.Minimum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MIN_4:
+                        this.PWM_MIN_4 = this.GetServo(4, ValueType.Minimum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MAX_1:
+                        this.PWM_MAX_1 = this.GetServo(1, ValueType.Maximum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MAX_2:
+                        this.PWM_MAX_2 = this.GetServo(2, ValueType.Maximum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MAX_3:
+                        this.PWM_MAX_3 = this.GetServo(3, ValueType.Maximum, log);
+                        break;
+                    case var _ when tempCommand == COMMAND_SET_PWM_MAX_4:
+                        this.PWM_MAX_4 = this.GetServo(4, ValueType.Maximum, log);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+
         }
 
 
