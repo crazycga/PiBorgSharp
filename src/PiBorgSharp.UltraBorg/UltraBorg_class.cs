@@ -9,68 +9,68 @@ namespace PiBorgSharp.UltraBorg
         // based on original source written by Arron Churchill (I think): https://www.piborg.org/blog/piborg-arron
         public static readonly bool THROTTLE_CODE = false;
 
-        public static readonly int I2C_SLAVE                    = 0x0703;
-        public static readonly byte I2C_MAX_LEN                 = 0x04;
-        public static readonly decimal USM_US_TO_MM             = 0.17500M;
-        public static readonly int PWM_MIN                      = 2000;
-        public static readonly int PWM_MAX                      = 4000;
-        public static readonly decimal DELAY_AFTER_EEPROM       = 0.01M;
-        public static readonly int PWM_RESET                    = 0xFFFF;
+        public static readonly int I2C_SLAVE = 0x0703;
+        public static readonly byte I2C_MAX_LEN = 0x04;
+        public static readonly decimal USM_US_TO_MM = 0.17500M;
+        public static readonly int PWM_MIN = 2000;
+        public static readonly int PWM_MAX = 4000;
+        public static readonly decimal DELAY_AFTER_EEPROM = 0.01M;
+        public static readonly int PWM_RESET = 0xFFFF;
 
-        public static readonly byte I2C_ID_SERVO_USM            = 0x36;
+        public static readonly byte I2C_ID_SERVO_USM = 0x36;
 
-        public static readonly byte COMMAND_GET_TIME_USM1       = 0x01;
-        public static readonly byte COMMAND_GET_TIME_USM2       = 0x02;
-        public static readonly byte COMMAND_GET_TIME_USM3       = 0x03;
-        public static readonly byte COMMAND_GET_TIME_USM4       = 0x04;
-        public static readonly byte COMMAND_SET_PWM1            = 0x05;
-        public static readonly byte COMMAND_GET_PWM1            = 0x06;
-        public static readonly byte COMMAND_SET_PWM2            = 0x07;
-        public static readonly byte COMMAND_GET_PWM2            = 0x08;
-        public static readonly byte COMMAND_SET_PWM3            = 0x09;
-        public static readonly byte COMMAND_GET_PWM3            = 0x0A;
-        public static readonly byte COMMAND_SET_PWM4            = 0x0B;
-        public static readonly byte COMMAND_GET_PWM4            = 0x0C;
-        public static readonly byte COMMAND_CALIBRATE_PWM1      = 0x0D;
-        public static readonly byte COMMAND_CALIBRATE_PWM2      = 0x0E;
-        public static readonly byte COMMAND_CALIBRATE_PWM3      = 0x0F;
-        public static readonly byte COMMAND_CALIBRATE_PWM4      = 0x10;
-        public static readonly byte COMMAND_GET_PWM_MIN_1       = 0x11;
-        public static readonly byte COMMAND_GET_PWM_MAX_1       = 0x12;
-        public static readonly byte COMMAND_GET_PWM_BOOT_1      = 0x13;
-        public static readonly byte COMMAND_GET_PWM_MIN_2       = 0x14;
-        public static readonly byte COMMAND_GET_PWM_MAX_2       = 0x15;
-        public static readonly byte COMMAND_GET_PWM_BOOT_2      = 0x16;
-        public static readonly byte COMMAND_GET_PWM_MIN_3       = 0x17;
-        public static readonly byte COMMAND_GET_PWM_MAX_3       = 0x18;
-        public static readonly byte COMMAND_GET_PWM_BOOT_3      = 0x19;
-        public static readonly byte COMMAND_GET_PWM_MIN_4       = 0x1A;
-        public static readonly byte COMMAND_GET_PWM_MAX_4       = 0x1B;
-        public static readonly byte COMMAND_GET_PWM_BOOT_4      = 0x1C;
-        public static readonly byte COMMAND_SET_PWM_MIN_1       = 0x1D;
-        public static readonly byte COMMAND_SET_PWM_MAX_1       = 0x1E;
-        public static readonly byte COMMAND_SET_PWM_BOOT_1      = 0x1F;
-        public static readonly byte COMMAND_SET_PWM_MIN_2       = 0x20;
-        public static readonly byte COMMAND_SET_PWM_MAX_2       = 0x21;
-        public static readonly byte COMMAND_SET_PWM_BOOT_2      = 0x22;
-        public static readonly byte COMMAND_SET_PWM_MIN_3       = 0x23;
-        public static readonly byte COMMAND_SET_PWM_MAX_3       = 0x24;
-        public static readonly byte COMMAND_SET_PWM_BOOT_3      = 0x25;
-        public static readonly byte COMMAND_SET_PWM_MIN_4       = 0x26;
-        public static readonly byte COMMAND_SET_PWM_MAX_4       = 0x27;
-        public static readonly byte COMMAND_SET_PWM_BOOT_4      = 0x28;
-        public static readonly byte COMMAND_GET_FILTER_USM1     = 0x29;
-        public static readonly byte COMMAND_GET_FILTER_USM2     = 0x2A;
-        public static readonly byte COMMAND_GET_FILTER_USM3     = 0x2B;
-        public static readonly byte COMMAND_GET_FILTER_USM4     = 0x2C;
-        public static readonly byte COMMAND_GET_ID              = 0x99;
-        public static readonly byte COMMAND_SET_I2C_ADD         = 0xAA;
+        public static readonly byte COMMAND_GET_TIME_USM1 = 0x01;
+        public static readonly byte COMMAND_GET_TIME_USM2 = 0x02;
+        public static readonly byte COMMAND_GET_TIME_USM3 = 0x03;
+        public static readonly byte COMMAND_GET_TIME_USM4 = 0x04;
+        public static readonly byte COMMAND_SET_PWM1 = 0x05;
+        public static readonly byte COMMAND_GET_PWM1 = 0x06;
+        public static readonly byte COMMAND_SET_PWM2 = 0x07;
+        public static readonly byte COMMAND_GET_PWM2 = 0x08;
+        public static readonly byte COMMAND_SET_PWM3 = 0x09;
+        public static readonly byte COMMAND_GET_PWM3 = 0x0A;
+        public static readonly byte COMMAND_SET_PWM4 = 0x0B;
+        public static readonly byte COMMAND_GET_PWM4 = 0x0C;
+        public static readonly byte COMMAND_CALIBRATE_PWM1 = 0x0D;
+        public static readonly byte COMMAND_CALIBRATE_PWM2 = 0x0E;
+        public static readonly byte COMMAND_CALIBRATE_PWM3 = 0x0F;
+        public static readonly byte COMMAND_CALIBRATE_PWM4 = 0x10;
+        public static readonly byte COMMAND_GET_PWM_MIN_1 = 0x11;
+        public static readonly byte COMMAND_GET_PWM_MAX_1 = 0x12;
+        public static readonly byte COMMAND_GET_PWM_BOOT_1 = 0x13;
+        public static readonly byte COMMAND_GET_PWM_MIN_2 = 0x14;
+        public static readonly byte COMMAND_GET_PWM_MAX_2 = 0x15;
+        public static readonly byte COMMAND_GET_PWM_BOOT_2 = 0x16;
+        public static readonly byte COMMAND_GET_PWM_MIN_3 = 0x17;
+        public static readonly byte COMMAND_GET_PWM_MAX_3 = 0x18;
+        public static readonly byte COMMAND_GET_PWM_BOOT_3 = 0x19;
+        public static readonly byte COMMAND_GET_PWM_MIN_4 = 0x1A;
+        public static readonly byte COMMAND_GET_PWM_MAX_4 = 0x1B;
+        public static readonly byte COMMAND_GET_PWM_BOOT_4 = 0x1C;
+        public static readonly byte COMMAND_SET_PWM_MIN_1 = 0x1D;
+        public static readonly byte COMMAND_SET_PWM_MAX_1 = 0x1E;
+        public static readonly byte COMMAND_SET_PWM_BOOT_1 = 0x1F;
+        public static readonly byte COMMAND_SET_PWM_MIN_2 = 0x20;
+        public static readonly byte COMMAND_SET_PWM_MAX_2 = 0x21;
+        public static readonly byte COMMAND_SET_PWM_BOOT_2 = 0x22;
+        public static readonly byte COMMAND_SET_PWM_MIN_3 = 0x23;
+        public static readonly byte COMMAND_SET_PWM_MAX_3 = 0x24;
+        public static readonly byte COMMAND_SET_PWM_BOOT_3 = 0x25;
+        public static readonly byte COMMAND_SET_PWM_MIN_4 = 0x26;
+        public static readonly byte COMMAND_SET_PWM_MAX_4 = 0x27;
+        public static readonly byte COMMAND_SET_PWM_BOOT_4 = 0x28;
+        public static readonly byte COMMAND_GET_FILTER_USM1 = 0x29;
+        public static readonly byte COMMAND_GET_FILTER_USM2 = 0x2A;
+        public static readonly byte COMMAND_GET_FILTER_USM3 = 0x2B;
+        public static readonly byte COMMAND_GET_FILTER_USM4 = 0x2C;
+        public static readonly byte COMMAND_GET_ID = 0x99;
+        public static readonly byte COMMAND_SET_I2C_ADD = 0xAA;
 
-        public static readonly byte COMMAND_VALUE_FWD           = 0x01;
-        public static readonly byte COMMAND_VALUE_REV           = 0x02;
+        public static readonly byte COMMAND_VALUE_FWD = 0x01;
+        public static readonly byte COMMAND_VALUE_REV = 0x02;
 
-        public static readonly byte COMMAND_VALUE_ON            = 0x01;
-        public static readonly byte COMMAND_VALUE_OFF           = 0x00;
+        public static readonly byte COMMAND_VALUE_ON = 0x01;
+        public static readonly byte COMMAND_VALUE_OFF = 0x00;
 
         public int PWM_MIN_1 { get; set; }
         public int PWM_MAX_1 { get; set; }
@@ -90,6 +90,12 @@ namespace PiBorgSharp.UltraBorg
             Minimum = 1
             , Maximum = 2
             , Boot = 3
+        }
+
+        public enum FilterType
+        {
+            Filtered = 1
+            , Unfiltered = 2
         }
 
         /// <summary>
@@ -206,8 +212,6 @@ namespace PiBorgSharp.UltraBorg
         /// <param name="tryOtherBus">CURRENTLY NO EFFECT</param>
         public UltraBorg_class(ILogger log = null, bool tryOtherBus = false)
         {
-            throw new NotImplementedException();
-            
             if (log != null)
             {
                 this._log = log;
@@ -234,6 +238,22 @@ namespace PiBorgSharp.UltraBorg
             //
             //this.PWM_MIN_1 = this.GetWithRetry(this.GetServoMinimum1, 5);
 
+        }
+
+        public int BusNumber
+        {
+            get
+            {
+                return this._bus;
+            }
+        }
+
+        public int UltraBorgAddress
+        {
+            get
+            {
+                return this._UltraBorgAddress;
+            }
         }
 
         /// <summary>
@@ -351,7 +371,23 @@ namespace PiBorgSharp.UltraBorg
             {
                 if (log != null)
                 {
-                    log.WriteLog("Getting servo minimum for motor...", ILogger.Priority.Information);
+                    string tempMessage = "Getting servo ";
+                    switch(checkBoundary)
+                    {
+                        case ValueType.Minimum:
+                            tempMessage += "minimum ";
+                            break;
+                        case ValueType.Maximum:
+                            tempMessage += "maximum ";
+                            break;
+                        case ValueType.Boot:
+                            tempMessage += "boot ";
+                            break;
+                    }
+
+                    tempMessage += "for motor " + motor.ToString() + "...";
+
+                    log.WriteLog(tempMessage, ILogger.Priority.Information);
                 }
                 using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
                 {
@@ -685,6 +721,133 @@ namespace PiBorgSharp.UltraBorg
 
         }
 
+        /// <summary>
+        /// Gets the distance for the ultrasonic modules in two forms: filtered and unfiltered.  Filtered responses are slower but more stable; unfiltered is more jumpy, but more responsive.  
+        /// Response examples: 0 - no object in range; 25 - object 25mm away; 3500 - object 3.5 m away
+        /// </summary>
+        /// <param name="sensor">Selected sensor: 1, 2, 3, or 4</param>
+        /// <param name="filter">Filtered - slower but more stable responses; unfiltered - faster but more jumpy responses</param>
+        /// <param name="log"></param>
+        /// <returns>Default: null; the ILogger interface used in this library</returns>
+        public uint GetDistance(byte sensor, FilterType filter, ILogger log = null)
+        {
+            uint tempReturn = 0;
+            byte tempCommand = 0xFF;
 
+            if (filter == FilterType.Filtered)
+            {
+                switch (sensor)
+                {
+                    case 1:
+                        tempCommand = COMMAND_GET_FILTER_USM1;
+                        break;
+                    case 2:
+                        tempCommand = COMMAND_GET_FILTER_USM2;
+                        break;
+                    case 3:
+                        tempCommand = COMMAND_GET_FILTER_USM3;
+                        break;
+                    case 4:
+                        tempCommand = COMMAND_GET_FILTER_USM4;
+                        break;
+                    default:
+                        tempCommand = 0xFE;
+                        break;
+                }
+            }
+            else
+            {
+                switch (sensor)
+                {
+                    case 1:
+                        tempCommand = COMMAND_GET_TIME_USM1;
+                        break;
+                    case 2:
+                        tempCommand = COMMAND_GET_TIME_USM2;
+                        break;
+                    case 3:
+                        tempCommand = COMMAND_GET_TIME_USM3;
+                        break;
+                    case 4:
+                        tempCommand = COMMAND_GET_TIME_USM4;
+                        break;
+                    default:
+                        tempCommand = 0xFD;
+                        break;
+                }
+            }
+
+            if (log != null) 
+            {
+                string tempMessage = "Getting ";
+                if (filter == FilterType.Filtered)
+                {
+                    tempMessage += "filtered ";
+                }
+                else
+                {
+                    tempMessage += "unfiltered ";
+                }
+                tempMessage += "distance from sensor #" + sensor.ToString();
+
+                log.WriteLog(tempMessage, ILogger.Priority.Information);
+            }
+
+            using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
+            {
+                bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand });
+                byte[] response = bus.ReadBytes(_UltraBorgAddress, I2C_MAX_LEN);
+                if (response[0] == tempCommand)
+                {
+                    tempReturn = (uint)((response[1] << 8) + response[2]);
+                    if (log != null)
+                    {
+                        string tempMessage = "Returned " + tempReturn.ToString() + " as a raw result...";
+                        log.WriteLog(tempMessage, ILogger.Priority.Information);
+                    }
+                    if (tempReturn == 65535)
+                    {
+                        tempReturn = 0;
+                    }
+                    else
+                    {
+                        tempReturn = Convert.ToUInt32(tempReturn * USM_US_TO_MM / 2);
+                    }
+                }
+            }
+
+            return tempReturn;
+        }
+
+        public void SetServoPosition(byte motor, ushort powerLevel, ILogger log = null)
+        {
+            byte highLevel = 0x00;
+            byte lowLevel = 0x00;
+            byte tempCommand = 0xFF;
+
+            switch (motor)
+            {
+                case 1:
+                    tempCommand = COMMAND_SET_PWM1;
+                    break;
+                case 2:
+                    tempCommand = COMMAND_SET_PWM2;
+                    break;
+                case 3:
+                    tempCommand = COMMAND_SET_PWM3;
+                    break;
+                case 4:
+                    tempCommand = COMMAND_SET_PWM4;
+                    break;
+            }
+
+            lowLevel = (byte)(powerLevel & 0xFF);
+            highLevel = (byte)((powerLevel >> 8) & 0xFF);
+
+            using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
+            {
+                bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand, highLevel, lowLevel });
+            }
+        }
     }
 }

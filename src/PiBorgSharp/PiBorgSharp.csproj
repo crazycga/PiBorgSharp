@@ -6,4 +6,10 @@
     <Version>0.0.2</Version>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PiBorgSharp.LibNativeI2C\LibNativeI2C.vcxproj">
+      <Private>true</Private>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>

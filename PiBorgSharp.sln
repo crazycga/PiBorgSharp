@@ -44,6 +44,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiBorgSharp.PicoBorgRev", "
 		{40A466AC-801B-4A79-BEBD-651936D61621} = {40A466AC-801B-4A79-BEBD-651936D61621}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiBorgSharp.SampleProgram", "src\PiBorgSharp.SampleProgram\PiBorgSharp.SampleProgram.csproj", "{630D3CD9-C542-44FF-A281-D221FB2EA892}"
+	ProjectSection(ProjectDependencies) = postProject
+		{58D56498-34E9-4051-938C-F3D7E652C5A8} = {58D56498-34E9-4051-938C-F3D7E652C5A8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -244,6 +249,26 @@ Global
 		{7F088EC6-D7EA-4EC1-B2C6-ABD0EC8E8755}.Release|x64.Build.0 = Release|Any CPU
 		{7F088EC6-D7EA-4EC1-B2C6-ABD0EC8E8755}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F088EC6-D7EA-4EC1-B2C6-ABD0EC8E8755}.Release|x86.Build.0 = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|ARM.Build.0 = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|x64.Build.0 = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Debug|x86.Build.0 = Debug|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|ARM.ActiveCfg = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|ARM.Build.0 = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|ARM64.Build.0 = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|x64.ActiveCfg = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|x64.Build.0 = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|x86.ActiveCfg = Release|Any CPU
+		{630D3CD9-C542-44FF-A281-D221FB2EA892}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

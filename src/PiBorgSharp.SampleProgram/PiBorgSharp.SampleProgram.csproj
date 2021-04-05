@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PiBorgSharp.UltraBorg\PiBorgSharp.UltraBorg.csproj">
+      <Private>true</Private>
+    </ProjectReference>
     <ProjectReference Include="..\PiBorgSharp\PiBorgSharp.csproj">
       <Private>true</Private>
     </ProjectReference>
