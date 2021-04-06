@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace PiBorgSharp.UltraBorg
 {
     public class UltraBorg_class
     {
         // based on original source written by Arron Churchill (I think): https://www.piborg.org/blog/piborg-arron
-        public static readonly bool THROTTLE_CODE = false;
+        public static bool THROTTLE_CODE = false;
+        public static readonly uint THROTTLE_SPEED = 10;           // NOTE: this is the fatest speed at which the sensors can run or they do not reset distances
 
         public static readonly int I2C_SLAVE = 0x0703;
         public static readonly byte I2C_MAX_LEN = 0x04;
-        public static readonly decimal USM_US_TO_MM = 0.17500M;
+        public static readonly decimal USM_US_TO_MM = 0.171497M;    // = 1 / 29.155 (speed of sound in microseconds per centimeter) / 2 (there and back) * 10 (centimeters to millimeters) = 0.1714971702966901
+        public static readonly decimal USM_US_TO_IN = 0.006752M;    // USM_US_TO_MM * 0.0393701 = 0.0067518607442977
         public static readonly int PWM_MIN = 2000;
         public static readonly int PWM_MAX = 4000;
         public static readonly decimal DELAY_AFTER_EEPROM = 0.01M;
@@ -84,6 +87,10 @@ namespace PiBorgSharp.UltraBorg
         private int _bus = 0x01;
         private int _UltraBorgAddress = 0x00;
         private ILogger _log = null;
+        private Stopwatch _internalClock_Sensor1 = new Stopwatch();
+        private Stopwatch _internalClock_Sensor2 = new Stopwatch();
+        private Stopwatch _internalClock_Sensor3 = new Stopwatch();
+        private Stopwatch _internalClock_Sensor4 = new Stopwatch();
 
         public enum ValueType
         {
@@ -235,9 +242,10 @@ namespace PiBorgSharp.UltraBorg
                 log.WriteLog("Loading UltraBorg on bus " + _bus.ToString("X2") + ", address " + _UltraBorgAddress.ToString("X2"), ILogger.Priority.Medium);
             }
 
-            //
-            //this.PWM_MIN_1 = this.GetWithRetry(this.GetServoMinimum1, 5);
-
+            _internalClock_Sensor1.Start();
+            _internalClock_Sensor2.Start();
+            _internalClock_Sensor3.Start();
+            _internalClock_Sensor4.Start();
         }
 
         public int BusNumber
@@ -365,7 +373,6 @@ namespace PiBorgSharp.UltraBorg
                     log.WriteLog(message, ILogger.Priority.Critical);
                 }
             }
-
 
             try
             {
@@ -777,7 +784,7 @@ namespace PiBorgSharp.UltraBorg
                 }
             }
 
-            if (log != null) 
+            if (log != null)
             {
                 string tempMessage = "Getting ";
                 if (filter == FilterType.Filtered)
@@ -791,6 +798,45 @@ namespace PiBorgSharp.UltraBorg
                 tempMessage += "distance from sensor #" + sensor.ToString();
 
                 log.WriteLog(tempMessage, ILogger.Priority.Information);
+            }
+
+            if (THROTTLE_CODE)
+            {
+                switch (sensor)
+                {
+                    case 1:
+                        {
+                            while (_internalClock_Sensor1.ElapsedMilliseconds < THROTTLE_SPEED)
+                            {
+                                System.Threading.Thread.Sleep(1);
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            while (_internalClock_Sensor2.ElapsedMilliseconds < THROTTLE_SPEED)
+                            {
+                                System.Threading.Thread.Sleep(1);
+                            }
+                        }
+                        break;
+                    case 3:
+                        {
+                            while (_internalClock_Sensor3.ElapsedMilliseconds < THROTTLE_SPEED)
+                            {
+                                System.Threading.Thread.Sleep(1);
+                            }
+                        }
+                        break;
+                    case 4:
+                        {
+                            while (_internalClock_Sensor4.ElapsedMilliseconds < THROTTLE_SPEED)
+                            {
+                                System.Threading.Thread.Sleep(1);
+                            }
+                        }
+                        break;
+                }
             }
 
             using (var bus = I2CBus.Open("/dev/i2c-" + this._bus.ToString()))
@@ -811,8 +857,35 @@ namespace PiBorgSharp.UltraBorg
                     }
                     else
                     {
-                        tempReturn = Convert.ToUInt32(tempReturn * USM_US_TO_MM / 2);
+                        tempReturn = Convert.ToUInt32(tempReturn * USM_US_TO_MM);
                     }
+                }
+            }
+
+            if (THROTTLE_CODE)
+            {
+                switch (sensor)
+                {
+                    case 1:
+                        {
+                            _internalClock_Sensor1.Restart();
+                        }
+                        break;
+                    case 2:
+                        {
+                            _internalClock_Sensor2.Restart();
+                        }
+                        break;
+                    case 3:
+                        {
+                            _internalClock_Sensor3.Restart();
+                        }
+                        break;
+                    case 4:
+                        {
+                            _internalClock_Sensor4.Restart();
+                        }
+                        break;
                 }
             }
 
@@ -848,6 +921,16 @@ namespace PiBorgSharp.UltraBorg
             {
                 bus.WriteBytes(_UltraBorgAddress, new byte[] { tempCommand, highLevel, lowLevel });
             }
+        }
+
+        public long Internal1TimePassed()
+        {
+            return _internalClock_Sensor1.ElapsedMilliseconds;
+        }
+
+        public bool Internal1TimerActive()
+        {
+            return _internalClock_Sensor1.IsRunning;
         }
     }
 }

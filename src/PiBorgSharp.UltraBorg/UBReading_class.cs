@@ -370,6 +370,11 @@ namespace PiBorgSharp.UltraBorg
                 return;
             }
 
+            if (log != null)
+            {
+                log.WriteLog("Enumerating environment on a scan type: " + scan.ToString());
+            }
+
             if (scan == ScanType.FastSensorsOnly)
             {
                 _sensor1Reading = myBorg.GetDistance(1, UltraBorg_class.FilterType.Unfiltered, log);

@@ -8,11 +8,26 @@ namespace PiBorgSharp.SampleProgram
     {
         static void Main(string[] args)
         {
+            UltraBorg_class.THROTTLE_CODE = true;
+
             MyLogger_class log = new MyLogger_class();
+
             UltraBorg_class myBorg = new UltraBorg_class(log);
+
             UBReading_class firstReadings = new UBReading_class(myBorg, log);
 
             firstReadings.EnumerateCurrentEnvironment(myBorg, UBReading_class.ScanType.FullScan, log);
+
+            //firstReadings.servo4Max = 4000;
+            //firstReadings.servo4Min = 2000;
+
+            //firstReadings.servo4Max = 65535;
+            //firstReadings.servo4Min = 0;
+
+            myBorg.SetServo(4, UltraBorg_class.ValueType.Minimum, 2000, log);
+            myBorg.SetServo(4, UltraBorg_class.ValueType.Maximum, 4000, log);
+
+            log.WriteLog("Motor 4 minimum: " + myBorg.GetServo(4, UltraBorg_class.ValueType.Minimum, log).ToString() + " maximum: " + myBorg.GetServo(4, UltraBorg_class.ValueType.Maximum, log).ToString());
 
             log.WriteLog("Sensor 1: " + firstReadings.sensor1Reading.ToString());
             log.WriteLog("Min 1: " + firstReadings.servo1Min.ToString());
@@ -39,7 +54,7 @@ namespace PiBorgSharp.SampleProgram
             uint s3;
             uint s4;
 
-            while (true)
+            while (!Console.KeyAvailable) 
             {
                 s1 = myBorg.GetDistance(1, UltraBorg_class.FilterType.Unfiltered);
                 s2 = myBorg.GetDistance(2, UltraBorg_class.FilterType.Unfiltered);
@@ -48,7 +63,9 @@ namespace PiBorgSharp.SampleProgram
 
                 Console.WriteLine("1: " + s1.ToString() + " 2: " + s2.ToString() + " 3: " + s3.ToString() + " 4: " + s4.ToString());
             }
+            if (Console.KeyAvailable) Console.ReadKey(false);
 
+            
         }
     }
 }
